@@ -22,3 +22,11 @@ Additional inputs, playing by genre, playing by artist, top of the charts,
 #Framework
 
 We'll be using skelleyman (skeleton)
+
+#user story
+
+AS A modern user of the tik tok app
+
+I WANT a game that tests my knowledge of my favorite music
+
+SO I CAN brag to my friends online
