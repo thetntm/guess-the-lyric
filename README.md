@@ -15,7 +15,13 @@ Get user input, Show the lyrics on screen, pick a button, YOU WIN.
 
 #advancements after that
 
-Add points, play the snippet of the song, Show additional info about the song? show the album cover,
+Add points,
+
+play audio from the song,
+
+Show additional info about the song (such as album cover)
+
+Share Via Twitter
 
 Additional inputs, playing by genre, playing by artist, top of the charts,
 
