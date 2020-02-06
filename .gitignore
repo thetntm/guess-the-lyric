@@ -79,3 +79,8 @@ fabric.properties
 !.vscode/extensions.json
 *.code-workspace
 
+.idea/.gitignore
+.idea/group-project-1.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
