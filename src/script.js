@@ -1,3 +1,16 @@
+
+let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
+let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken}&q_artist="Bieber"`;
+
+fetch(musicMatchURL).then(res => console.log(res));
+
+
+
+
+
+
+
+
 //Global Variables
 /* 
 Put all variables that will be usedthroughout the js file Here.
