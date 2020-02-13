@@ -8,6 +8,8 @@ let songLoaded = false; // Used to check if the song is being loaded. Important 
 
 let currentSong = null; // currently loaded song
 
+let currentSongTitle = null; // current song title
+
 let currentLyrics = null; // currently loaded lyrics
 
 let correctAnswer = 0; //Used to determine which answer is the correct answer, randomly set when the song is loaded.
@@ -52,12 +54,31 @@ function getRandomInt(max) {
 
 function updateSongTitle()
 {
-  songTitleElem.text(currentSong.track_name);
+  currentSongTitle = currentSong.track_name;
+  songTitleElem.text(currentSongTitle);
 }
 
 function loadSong()
 {
-  console.log(getRandomParagraph(currentLyrics));
+
+  let currentParagraph = getRandomParagraph(currentLyrics);
+
+  console.log(currentParagraph);
+
+  let snippetPrompt = ""
+
+  let finalIndex = 0;
+
+  for (let i = 0; ((i < currentParagraph.length - 1) && (i < 3)); i++) {
+    finalIndex++;
+    snippetPrompt += "<p>"
+    snippetPrompt += currentParagraph[i];
+    snippetPrompt += "</p>";
+  }
+  snippetPrompt += "<p>_____</p>"
+  lyricsDisplayElem.append(snippetPrompt);
+  correctAnswer = getRandomInt(3)
+  choiceSpanElems[correctAnswer].text(currentParagraph[finalIndex])
 }
 
 //Break up the text into an array
