@@ -1,10 +1,41 @@
 
 let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
 let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken}&q_artist="Bieber"`
+let trackList
+let trackId
 
 // fetch(musicMatchURL).then(res => console.log(res));
 
+// get song list
+$.ajax({
+  type: "GET",
+  data: {
+    apikey:"c1f50a305f3f47234be0d4c3568ef5c9",
+    country: "US",
+    page_size: "50",
+    format:"jsonp",
+    callback:"jsonp_callback"
+  },
+  url: "https://api.musixmatch.com/ws/1.1/CHART.TRACKS.GET",
+  dataType: "jsonp",
+  jsonpCallback: 'jsonp_callback',
+  contentType: 'application/json',
+  success: function(data) {
+    console.log(data);
+    console.log(data.message.body.track_list)
+    trackList = data.message.body.track_list
+    trackId = trackList[getRandomInt(trackList.length - 1)].track.track_id
+    debugger
+  },
+  error: function(jqXHR, textStatus, errorThrown) {
+    console.log(jqXHR);
+    console.log(textStatus);
+    console.log(errorThrown);
+  }
+})
 
+console.log(`trackId=${trackId}`)
+// get lyrics
 $.ajax({
   type: "GET",
   data: {
@@ -19,6 +50,7 @@ $.ajax({
   contentType: 'application/json',
   success: function(data) {
     console.log(data);
+    console.log(data.message.body.lyrics.lyrics_body)
   },
   error: function(jqXHR, textStatus, errorThrown) {
     console.log(jqXHR);
@@ -27,7 +59,9 @@ $.ajax({
   }
 })
 
-
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
 
 
 //Global Variables
