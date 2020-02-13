@@ -4,6 +4,14 @@ Put all variables that will be usedthroughout the js file Here.
 If Variables are used only in one function, declare them within that function's scope.
 */
 
+let songLoaded = false; // Used to check if the song is being loaded. Important for button click events
+
+let currentSong = null; // currently loaded song
+
+let currentLyrics = null; // currently loaded lyrics
+
+let correctAnswer = 0; //Used to determine which answer is the correct answer, randomly set when the song is loaded.
+
 let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
 let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken}&q_artist="Bieber"`
 
@@ -11,6 +19,24 @@ let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken
 /*
 If a DOM Element or Jquery Wrapper is important to the project, declare it as a variable here.
 */
+
+let songTitleElem = $("#song-title");
+
+let btnElems = 
+[
+  $("#button-0"),
+  $("#button-1"),
+  $("#button-2"),
+  $("#button-3")
+];
+
+let choiceSpanElems = 
+[
+  $("#choice-0"),
+  $("#choice-1"),
+  $("#choice-2"),
+  $("#choice-3")
+];
 
 //Useful Functions
 /*
@@ -22,9 +48,14 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-function updateLyricElements(lyrics)
+function updateSongTitle(title)
 {
+  songTitleElem.text(currentSong.track_name);
+}
 
+function loadSong(song,lyrics)
+{
+  console.log(getRandomParagraph(currentLyrics));
 }
 
 //Break up the text into an array
@@ -39,9 +70,53 @@ function getRandomParagraph(lyrics)
   return paragraph;
 }
 
-function getRandomLine(line)
-{
+//AJAX Functions
 
+function musixmatchChartsSuccess(data) {
+
+  let trackList = data.message.body.track_list
+  currentSong = trackList[getRandomInt(trackList.length - 1)].track
+  let trackId = currentSong.track_id
+
+  updateSongTitle();
+
+  console.log(currentSong);
+
+  // fetch lyrics for trackId
+  $.ajax({
+    type: "GET",
+    data: {
+      apikey:"c1f50a305f3f47234be0d4c3568ef5c9",
+      track_id: trackId,
+      format:"jsonp",
+      callback:"jsonp_callback"
+    },
+    url: "https://api.musixmatch.com/ws/1.1/track.lyrics.get",
+    dataType: "jsonp",
+    jsonpCallback: 'jsonp_callback',
+    contentType: 'application/json',
+    success: musixmatchLyricsSuccess,
+    error: musixmatchLyricsError
+  })
+}
+
+function musixmatchChartsError(jqXHR, textStatus, errorThrown) {
+  console.log(jqXHR);
+  console.log(textStatus);
+  console.log(errorThrown);
+}
+
+
+function musixmatchLyricsSuccess(data)
+{
+  currentLyrics = data.message.body.lyrics.lyrics_body;
+  loadSong()
+}
+
+function musixmatchLyricsError(jqXHR, textStatus, errorThrown) {
+  console.log(jqXHR);
+  console.log(textStatus);
+  console.log(errorThrown);
 }
 
 //Event Functions
@@ -63,6 +138,7 @@ This is where we will put any code that needs to be run after the page has loade
 // fetch(musicMatchURL).then(res => console.log(res));
 
 // get song list
+
 $.ajax({
   type: "GET",
   data: {
@@ -76,43 +152,6 @@ $.ajax({
   dataType: "jsonp",
   jsonpCallback: 'jsonp_callback',
   contentType: 'application/json',
-  success: function(data) {
-    console.log(data);
-    console.log(data.message.body.track_list)
-    let trackList = data.message.body.track_list
-    let trackId = trackList[getRandomInt(trackList.length - 1)].track.track_id
-
-    console.log(`trackId=${trackId}`)
-
-    // fetch lyrics for trackId
-    $.ajax({
-      type: "GET",
-      data: {
-        apikey:"c1f50a305f3f47234be0d4c3568ef5c9",
-        track_id: trackId,
-        format:"jsonp",
-        callback:"jsonp_callback"
-      },
-      url: "https://api.musixmatch.com/ws/1.1/track.lyrics.get",
-      dataType: "jsonp",
-      jsonpCallback: 'jsonp_callback',
-      contentType: 'application/json',
-      success: function(data) {
-        console.log(data);
-        let lyrics = data.message.body.lyrics.lyrics_body;
-        console.log(getRandomParagraph(lyrics));
-        updateLyricElements(lyrics);
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-      }
-    })
-  },
-  error: function(jqXHR, textStatus, errorThrown) {
-    console.log(jqXHR);
-    console.log(textStatus);
-    console.log(errorThrown);
-  }
+  success: musixmatchChartsSuccess,
+  error: musixmatchChartsError
 })
