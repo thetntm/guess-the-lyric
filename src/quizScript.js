@@ -22,6 +22,8 @@ If a DOM Element or Jquery Wrapper is important to the project, declare it as a 
 
 let songTitleElem = $("#song-title");
 
+let lyricsDisplayElem = $("#lyrics-display");
+
 let btnElems = 
 [
   $("#button-0"),
@@ -48,12 +50,12 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-function updateSongTitle(title)
+function updateSongTitle()
 {
   songTitleElem.text(currentSong.track_name);
 }
 
-function loadSong(song,lyrics)
+function loadSong()
 {
   console.log(getRandomParagraph(currentLyrics));
 }
