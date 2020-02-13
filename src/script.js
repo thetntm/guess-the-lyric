@@ -1,8 +1,6 @@
 
 let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
 let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken}&q_artist="Bieber"`
-let trackList
-let trackId
 
 // fetch(musicMatchURL).then(res => console.log(res));
 
@@ -23,8 +21,8 @@ $.ajax({
   success: function(data) {
     console.log(data);
     console.log(data.message.body.track_list)
-    trackList = data.message.body.track_list
-    trackId = trackList[getRandomInt(trackList.length - 1)].track.track_id
+    let trackList = data.message.body.track_list
+    let trackId = trackList[getRandomInt(trackList.length - 1)].track.track_id
 
     console.log(`trackId=${trackId}`)
 // get lyrics
