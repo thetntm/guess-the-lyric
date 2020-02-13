@@ -25,7 +25,8 @@ $.ajax({
     let trackId = trackList[getRandomInt(trackList.length - 1)].track.track_id
 
     console.log(`trackId=${trackId}`)
-// get lyrics
+
+    // fetch lyrics for trackId
     $.ajax({
       type: "GET",
       data: {
