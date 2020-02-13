@@ -2,6 +2,7 @@
     padding: initial;
     align-items: center;
     position: relative;
+    margin-top: 25px;
    
 }
 .gameTitle {
@@ -21,6 +22,7 @@
     height: 40px;
     border-radius: 5rem;
     border-color: #d78973;
+    
 }
 
 #startBtn:hover {
