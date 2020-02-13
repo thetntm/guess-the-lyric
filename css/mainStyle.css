@@ -1,0 +1,31 @@
+.container {
+    padding: initial;
+    align-items: center;
+    position: relative;
+    margin-top: 25px;
+   
+}
+.gameTitle {
+    color: white;
+    font-family: 'Lobster', cursive;
+    font-size: 95px;
+  
+  
+}
+
+.startBtn {
+    color: white;
+    background-color: #d78973;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: large;
+    width: 250px;
+    height: 40px;
+    border-radius: 5rem;
+    border-color: #d78973;
+    
+}
+
+.startBtn:hover {
+    background-color: white;
+    color: #d78973;
+}
