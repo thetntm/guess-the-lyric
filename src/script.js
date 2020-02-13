@@ -1,12 +1,31 @@
 
 let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
-let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken}&q_artist="Bieber"`;
+let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken}&q_artist="Bieber"`
 
-fetch(musicMatchURL).then(res => console.log(res));
-
-
+// fetch(musicMatchURL).then(res => console.log(res));
 
 
+$.ajax({
+  type: "GET",
+  data: {
+    apikey:"c1f50a305f3f47234be0d4c3568ef5c9",
+    track_id: trackId,
+    format:"jsonp",
+    callback:"jsonp_callback"
+  },
+  url: "https://api.musixmatch.com/ws/1.1/track.lyrics.get",
+  dataType: "jsonp",
+  jsonpCallback: 'jsonp_callback',
+  contentType: 'application/json',
+  success: function(data) {
+    console.log(data);
+  },
+  error: function(jqXHR, textStatus, errorThrown) {
+    console.log(jqXHR);
+    console.log(textStatus);
+    console.log(errorThrown);
+  }
+})
 
 
 
