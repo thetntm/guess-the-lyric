@@ -6,3 +6,6 @@ function startButtonClicked()
 {
     window.location.replace("./quiz.html");
 }
+
+//--Event Assignment
+startBtnElem.click(startButtonClicked);
