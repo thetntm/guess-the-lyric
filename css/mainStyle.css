@@ -13,7 +13,7 @@
   
 }
 
-.startBtn {
+#startBtn {
     color: white;
     background-color: #d78973;
     font-family: 'Times New Roman', Times, serif;
@@ -25,7 +25,7 @@
     
 }
 
-.startBtn:hover {
+#startBtn:hover {
     background-color: white;
     color: #d78973;
 }
