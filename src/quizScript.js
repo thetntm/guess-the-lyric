@@ -1,6 +1,64 @@
+//Global Variables
+/* 
+Put all variables that will be usedthroughout the js file Here.
+If Variables are used only in one function, declare them within that function's scope.
+*/
 
 let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
 let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken}&q_artist="Bieber"`
+
+//DOM Elements and Jquery Wrappers
+/*
+If a DOM Element or Jquery Wrapper is important to the project, declare it as a variable here.
+*/
+
+//Useful Functions
+/*
+This is where we will define functions that we may be calling often,
+or that would be useful to have defined as functions instead of standard code.
+*/
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+function updateLyricElements(lyrics)
+{
+
+}
+
+//Break up the text into an array
+function getRandomParagraph(lyrics)
+{
+  //cut off the commercial part
+  console.log(lyrics.indexOf("..."))
+  lyrics = lyrics.slice(0,lyrics.indexOf("...") - 1);
+  lyricsArray = lyrics.split("\n\n");
+  let paragraphIndex = getRandomInt(lyricsArray.length - 1);
+  let paragraph = lyricsArray[paragraphIndex].split("\n");
+  return paragraph;
+}
+
+function getRandomLine(line)
+{
+
+}
+
+//Event Functions
+/*
+This is where we will define functions that are called by event handlers,
+Such as click methods for buttons
+*/
+
+//Event Assignment
+/*
+This is where we will assign the events of various elements to their functions.
+*/
+
+//Code to run on Page load
+/*
+This is where we will put any code that needs to be run after the page has loaded.
+*/
 
 // fetch(musicMatchURL).then(res => console.log(res));
 
@@ -41,7 +99,9 @@ $.ajax({
       contentType: 'application/json',
       success: function(data) {
         console.log(data);
-        console.log(data.message.body.lyrics.lyrics_body)
+        let lyrics = data.message.body.lyrics.lyrics_body;
+        console.log(getRandomParagraph(lyrics));
+        updateLyricElements(lyrics);
       },
       error: function(jqXHR, textStatus, errorThrown) {
         console.log(jqXHR);
@@ -56,42 +116,3 @@ $.ajax({
     console.log(errorThrown);
   }
 })
-
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
-
-
-//Global Variables
-/* 
-Put all variables that will be usedthroughout the js file Here.
-If Variables are used only in one function, declare them within that function's scope.
-*/
-
-//DOM Elements and Jquery Wrappers
-/*
-If a DOM Element or Jquery Wrapper is important to the project, declare it as a variable here.
-*/
-
-//Useful Functions
-/*
-This is where we will define functions that we may be calling often,
-or that would be useful to have defined as functions instead of standard code.
-*/
-
-//Event Functions
-/*
-This is where we will define functions that are called by event handlers,
-Such as click methods for buttons
-*/
-
-//Event Assignment
-/*
-This is where we will assign the events of various elements to their functions.
-*/
-
-//Code to run on Page load
-/*
-This is where we will put any code that needs to be run after the page has loaded.
-*/
