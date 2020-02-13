@@ -25,7 +25,31 @@ $.ajax({
     console.log(data.message.body.track_list)
     trackList = data.message.body.track_list
     trackId = trackList[getRandomInt(trackList.length - 1)].track.track_id
-    debugger
+
+    console.log(`trackId=${trackId}`)
+// get lyrics
+    $.ajax({
+      type: "GET",
+      data: {
+        apikey:"c1f50a305f3f47234be0d4c3568ef5c9",
+        track_id: trackId,
+        format:"jsonp",
+        callback:"jsonp_callback"
+      },
+      url: "https://api.musixmatch.com/ws/1.1/track.lyrics.get",
+      dataType: "jsonp",
+      jsonpCallback: 'jsonp_callback',
+      contentType: 'application/json',
+      success: function(data) {
+        console.log(data);
+        console.log(data.message.body.lyrics.lyrics_body)
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    })
   },
   error: function(jqXHR, textStatus, errorThrown) {
     console.log(jqXHR);
@@ -34,30 +58,6 @@ $.ajax({
   }
 })
 
-console.log(`trackId=${trackId}`)
-// get lyrics
-$.ajax({
-  type: "GET",
-  data: {
-    apikey:"c1f50a305f3f47234be0d4c3568ef5c9",
-    track_id: trackId,
-    format:"jsonp",
-    callback:"jsonp_callback"
-  },
-  url: "https://api.musixmatch.com/ws/1.1/track.lyrics.get",
-  dataType: "jsonp",
-  jsonpCallback: 'jsonp_callback',
-  contentType: 'application/json',
-  success: function(data) {
-    console.log(data);
-    console.log(data.message.body.lyrics.lyrics_body)
-  },
-  error: function(jqXHR, textStatus, errorThrown) {
-    console.log(jqXHR);
-    console.log(textStatus);
-    console.log(errorThrown);
-  }
-})
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
