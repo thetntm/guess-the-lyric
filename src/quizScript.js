@@ -4,6 +4,22 @@ Put all variables that will be usedthroughout the js file Here.
 If Variables are used only in one function, declare them within that function's scope.
 */
 
+//Values that aren't reset when rebootData() is called:
+
+let currentScore = 0;
+
+let currentQuizIndex = 0; //index for number of questions the user has answered so far.
+
+let maxQuizIndex = 9; //Max amount quizIndex can get to before going on to results;
+
+let pastSongTitles = [];
+
+let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
+
+let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken}&q_artist="Bieber"`
+
+//Values that ARE reset when rebootData() is called:
+
 let songLoaded = false; // Used to check if the song is being loaded. Important for button click events
 
 let currentSong = null; // currently loaded song
@@ -16,9 +32,6 @@ let correctAnswerIndex = null; //Used to determine which answer is the correct a
 
 let correctAnswerText = "";
 
-let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
-let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken}&q_artist="Bieber"`
-
 //DOM Elements and Jquery Wrappers
 /*
 If a DOM Element or Jquery Wrapper is important to the project, declare it as a variable here.
@@ -27,6 +40,8 @@ If a DOM Element or Jquery Wrapper is important to the project, declare it as a 
 let songTitleElem = $("#song-title");
 
 let lyricsDisplayElem = $("#lyrics-display");
+
+let scoreDisplayElem = $("#score-display");
 
 let btnElems = 
 [
@@ -110,6 +125,8 @@ function loadSong()
   lyricsDisplayElem.append(snippetPrompt);
   choiceSpanElems[correctAnswerIndex].text(correctAnswerText);
   songTitleElem.text(currentSongTitle);
+
+  songLoaded = true;
 }
 
 //Break up the text into an array
@@ -185,6 +202,8 @@ function musixmatchLyricsError(jqXHR, textStatus, errorThrown) {
 
 function rebootData()
 {
+  lyricsDisplayElem.empty();
+
   songLoaded = false; // Used to check if the song is being loaded. Important for button click events
 
   currentSong = null; // currently loaded song
@@ -215,16 +234,53 @@ function rebootData()
   })
 }
 
+//Code to run on correct answer selected.
+function correctAnswerPicked()
+{
+  currentScore += 1;
+  scoreDisplayElem.text(currentScore);
+}
+
+//Code to run on incorrect answer selected.
+function incorrectAnswerPicked()
+{
+
+}
+
 //Event Functions
 /*
 This is where we will define functions that are called by event handlers,
 Such as click methods for buttons
 */
 
+function answerBtnClicked(event)
+{
+  if (!songLoaded)
+  {
+    return false;
+  }
+  const buttonClickedIndex = parseInt(event.target.id.slice(-1));
+  console.log(buttonClickedIndex);
+  if (choiceSpanElems[buttonClickedIndex].text() == correctAnswerText)
+  {
+    correctAnswerPicked();
+  } else
+  {
+    incorrectAnswerPicked();
+  }
+  currentQuizIndex += 1;
+
+  rebootData();
+}
+
 //Event Assignment
 /*
 This is where we will assign the events of various elements to their functions.
 */
+
+for (let i = 0; i < btnElems.length; i++) {
+  btnElems[i].click(answerBtnClicked);
+}
 
 //Code to run on Page load
 /*

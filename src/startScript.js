@@ -4,7 +4,7 @@ let startBtnElem = $("#startBtn");
 //--Event Functions
 function startButtonClicked()
 {
-    window.location.replace("./quiz.html");
+    window.location.href = "./quiz.html";
 }
 
 //--Event Assignment
