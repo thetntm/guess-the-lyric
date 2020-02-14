@@ -37,6 +37,12 @@ let correctAnswerText = "";
 If a DOM Element or Jquery Wrapper is important to the project, declare it as a variable here.
 */
 
+let quizContainerElem = $("#quiz-container");
+
+let resultsContainerElem = $("#results-container");
+
+let finalScoreElem = $("#final-score");
+
 let songTitleElem = $("#song-title");
 
 let lyricsDisplayElem = $("#lyrics-display");
@@ -80,8 +86,6 @@ function loadSong()
     return false;
   }
 
-  console.log(currentParagraph);
-
   let snippetPrompt = ""
 
   let finalIndex = 0;
@@ -111,12 +115,10 @@ function loadSong()
       continue;
     }
     let newFakeAnswer = getRandomLine(currentLyrics);
-    console.log(newFakeAnswer);
     while (newFakeAnswer == correctAnswerText)
     {
       newFakeAnswer = getRandomLine(currentLyrics);
     }
-    console.log(choiceSpanElems[i].text());
     choiceSpanElems[i].text(newFakeAnswer);
 
   }
@@ -160,7 +162,12 @@ function musixmatchChartsSuccess(data) {
   let trackId = currentSong.track_id;
   currentSongTitle = currentSong.track_name;
 
-  console.log(currentSong);
+  //Check to make sure this isn't a song the user has already been quized on
+  if (pastSongTitles.includes(currentSongTitle))
+  {
+    rebootData()
+    return;
+  }
 
   // fetch lyrics for trackId
   $.ajax({
@@ -247,6 +254,13 @@ function incorrectAnswerPicked()
 
 }
 
+function endQuiz()
+{
+  finalScoreElem.text(currentScore);
+  quizContainerElem.css("display","none");
+  resultsContainerElem.css("display","block");
+}
+
 //Event Functions
 /*
 This is where we will define functions that are called by event handlers,
@@ -260,7 +274,6 @@ function answerBtnClicked(event)
     return false;
   }
   const buttonClickedIndex = parseInt(event.target.id.slice(-1));
-  console.log(buttonClickedIndex);
   if (choiceSpanElems[buttonClickedIndex].text() == correctAnswerText)
   {
     correctAnswerPicked();
@@ -270,7 +283,15 @@ function answerBtnClicked(event)
   }
   currentQuizIndex += 1;
 
-  rebootData();
+  pastSongTitles.push(currentSongTitle);
+
+  if (currentQuizIndex <= maxQuizIndex)
+  {
+    rebootData();
+  } else
+  {
+    endQuiz()
+  }
 }
 
 //Event Assignment

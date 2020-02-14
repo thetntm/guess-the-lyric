@@ -13,8 +13,8 @@
     <title>Document</title>
 </head>
 <body>
-    <!--Main Container-->
-    <div class="container">
+    <!--Main Quiz Container-->
+    <div class="container" id="quiz-container">
 
         <h1>
             <span id="song-title"></span>
@@ -36,9 +36,12 @@
         </button>
 
         <span id="lyrics-display"></span>
-        
+    </div>
 
-
+    <!--Results Container-->
+    <div class = "container" id="results-container" style="display:none">
+        <h1>Results</h1>
+        <span id="final-score">0</span>
     </div>
     <!--AJAX Javascript-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
