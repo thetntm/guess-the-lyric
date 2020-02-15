@@ -4,6 +4,10 @@ Put all variables that will be usedthroughout the js file Here.
 If Variables are used only in one function, declare them within that function's scope.
 */
 
+//Values that will be commented out in the final product
+
+let sampleLastFMRequestURL = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=fb824c5191bba5f0fb691292f3402986&artist=cher&track=believe&format=json"
+
 //Values that aren't reset when rebootData() is called:
 
 let currentScore = 0;
@@ -13,6 +17,8 @@ let currentQuizIndex = 0; //index for number of questions the user has answered 
 let maxQuizIndex = 9; //Max amount quizIndex can get to before going on to results;
 
 let pastSongTitles = [];
+
+let lastFMKey = "fb824c5191bba5f0fb691292f3402986";
 
 let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
 
@@ -24,13 +30,17 @@ let songLoaded = false; // Used to check if the song is being loaded. Important 
 
 let currentSong = null; // currently loaded song
 
+let currentMusixmatchTrackID = null; // current musixmatch track id
+
 let currentSongTitle = null; // current song title
+
+let currentArtist = null; // current artist name
 
 let currentLyrics = null; // currently loaded lyrics
 
 let correctAnswerIndex = null; //Used to determine which answer is the correct answer, randomly set when the song is loaded.
 
-let correctAnswerText = "";
+let correctAnswerText = ""; // text representing correct answer
 
 //DOM Elements and Jquery Wrappers
 /*
@@ -48,6 +58,14 @@ let songTitleElem = $("#song-title");
 let lyricsDisplayElem = $("#lyrics-display");
 
 let scoreDisplayElem = $("#score-display");
+
+let songArtistElem = $("#song-artist");
+
+let songAlbumCoverElem = $("#song-album-cover");
+
+let lastFMDiv = $("#last-fm-div");
+
+let songLastFMLink = $("#last-fm-link");
 
 let btnElems = 
 [
@@ -77,6 +95,7 @@ function getRandomInt(max) {
 
 function loadSong()
 {
+  // Get and Set lastfm data
 
   let currentParagraph = getRandomParagraph(currentLyrics);
 
@@ -127,6 +146,7 @@ function loadSong()
   lyricsDisplayElem.append(snippetPrompt);
   choiceSpanElems[correctAnswerIndex].text(correctAnswerText);
   songTitleElem.text(currentSongTitle);
+  songArtistElem.text(currentArtist);
 
   songLoaded = true;
 }
@@ -155,12 +175,68 @@ function getRandomLine(lyrics)
 
 //AJAX Functions
 
+// AJAX CALLS FOR LASTFM
+
+function lastFMSuccess(data)
+{
+  if (data.error)
+  {
+    // give up onthe lastFM data and load the song as is
+    console.log("an error occured with loading lastfm data!")
+    lastFMDiv.css("display","none")
+    loadSong();
+    return;
+  }
+  lastFMDiv.css("display","block");
+
+  let lastFMTrackData = data.track;
+
+  songLastFMLink.attr("href",lastFMTrackData.url);
+
+  if (lastFMTrackData.album)
+  {
+    songAlbumCoverElem.attr("src",lastFMTrackData.album.image[3]["#text"]);
+  }
+
+  console.log(lastFMTrackData);
+
+  loadSong();
+}
+
+function lastFMError(jqXHR, textStatus, errorThrown) {
+  console.log(jqXHR);
+  console.log(textStatus);
+  console.log(errorThrown);
+}
+
+function makeLastFMRequest()
+{
+  $.ajax({
+    type: "GET",
+    data: {
+      api_key:lastFMKey,
+      method:"track.getInfo",
+      artist:currentArtist,
+      track:currentSongTitle,
+      format:"json"
+    },
+    url: "http://ws.audioscrobbler.com/2.0/",
+    success: lastFMSuccess,
+    error: lastFMError
+  })
+}
+
+
+/// AJAX CALLS FOR MUSIXMATCH CHART DATA
+
 function musixmatchChartsSuccess(data) {
 
   let trackList = data.message.body.track_list;
   currentSong = trackList[getRandomInt(trackList.length - 1)].track;
-  let trackId = currentSong.track_id;
+  console.log(currentSong);
+  currentMusixmatchTrackID = currentSong.track_id;
   currentSongTitle = currentSong.track_name;
+  currentArtist = currentSong.artist_name;
 
   //Check to make sure this isn't a song the user has already been quized on
   if (pastSongTitles.includes(currentSongTitle))
@@ -170,21 +246,7 @@ function musixmatchChartsSuccess(data) {
   }
 
   // fetch lyrics for trackId
-  $.ajax({
-    type: "GET",
-    data: {
-      apikey:"c1f50a305f3f47234be0d4c3568ef5c9",
-      track_id: trackId,
-      format:"jsonp",
-      callback:"jsonp_callback"
-    },
-    url: "https://api.musixmatch.com/ws/1.1/track.lyrics.get",
-    dataType: "jsonp",
-    jsonpCallback: 'jsonp_callback',
-    contentType: 'application/json',
-    success: musixmatchLyricsSuccess,
-    error: musixmatchLyricsError
-  })
+  makeMusixmatchLyricsRequest();
 }
 
 function musixmatchChartsError(jqXHR, textStatus, errorThrown) {
@@ -193,36 +255,8 @@ function musixmatchChartsError(jqXHR, textStatus, errorThrown) {
   console.log(errorThrown);
 }
 
-function musixmatchLyricsSuccess(data)
+function makeMusixmatchChartsRequest()
 {
-  //get the lyrics and cut off the commercial part
-  currentLyrics = data.message.body.lyrics.lyrics_body
-  currentLyrics = currentLyrics.slice(0,currentLyrics.indexOf("...") - 1);
-  loadSong();
-}
-
-function musixmatchLyricsError(jqXHR, textStatus, errorThrown) {
-  console.log(jqXHR);
-  console.log(textStatus);
-  console.log(errorThrown);
-}
-
-function rebootData()
-{
-  lyricsDisplayElem.empty();
-
-  songLoaded = false; // Used to check if the song is being loaded. Important for button click events
-
-  currentSong = null; // currently loaded song
-
-  currentSongTitle = null; // current song title
-
-  currentLyrics = null; // currently loaded lyrics
-
-  correctAnswer = null; //Used to determine which answer is the correct answer, randomly set when the song is loaded.
-
-  correctAnswerText = "";
-
   $.ajax({
     type: "GET",
     data: {
@@ -239,6 +273,64 @@ function rebootData()
     success: musixmatchChartsSuccess,
     error: musixmatchChartsError
   })
+}
+
+
+// AJAX CALLS FOR MUSIXMATCH LYRICS DATA
+
+function musixmatchLyricsSuccess(data)
+{
+  //get the lyrics and cut off the commercial part
+  currentLyrics = data.message.body.lyrics.lyrics_body
+  currentLyrics = currentLyrics.slice(0,currentLyrics.indexOf("...") - 1);
+  makeLastFMRequest();
+}
+
+function musixmatchLyricsError(jqXHR, textStatus, errorThrown) {
+  console.log(jqXHR);
+  console.log(textStatus);
+  console.log(errorThrown);
+}
+
+function makeMusixmatchLyricsRequest()
+{
+  $.ajax({
+    type: "GET",
+    data: {
+      apikey:"c1f50a305f3f47234be0d4c3568ef5c9",
+      track_id: currentMusixmatchTrackID,
+      format:"jsonp",
+      callback:"jsonp_callback"
+    },
+    url: "https://api.musixmatch.com/ws/1.1/track.lyrics.get",
+    dataType: "jsonp",
+    jsonpCallback: 'jsonp_callback',
+    contentType: 'application/json',
+    success: musixmatchLyricsSuccess,
+    error: musixmatchLyricsError})
+}
+
+function rebootData()
+{
+  lyricsDisplayElem.empty();
+
+  songLoaded = false; // Used to check if the song is being loaded. Important for button click events
+
+  currentSong = null; // currently loaded song
+
+  currentMusixmatchTrackID = null; // current musixmatch track id
+
+  currentSongTitle = null; // current song title
+  
+  currentArtist = null; // current artist name
+
+  currentLyrics = null; // currently loaded lyrics
+
+  correctAnswer = null; //Used to determine which answer is the correct answer, randomly set when the song is loaded.
+
+  correctAnswerText = "";
+
+  makeMusixmatchChartsRequest();
 }
 
 //Code to run on correct answer selected.
