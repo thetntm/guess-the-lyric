@@ -6,7 +6,7 @@ If Variables are used only in one function, declare them within that function's 
 
 //Values that will be commented out in the final product
 
-let sampleLastFMRequestURL = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=fb824c5191bba5f0fb691292f3402986&artist=cher&track=believe&format=json"
+let sampleLastFMRequestURL = "https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=fb824c5191bba5f0fb691292f3402986&artist=cher&track=believe&format=json"
 
 //Values that aren't reset when rebootData() is called:
 
