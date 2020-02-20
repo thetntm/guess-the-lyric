@@ -91,6 +91,8 @@ let choiceSpanElems =
   $("#choice-3")
 ];
 
+let backBtnElem = $("#go-back");
+
 //Useful Functions
 /*
 This is where we will define functions that we may be calling often,
@@ -137,7 +139,7 @@ function loadSong()
   // currentParagraph.forEach((el, ind, arr  => {
   //   //break
   // }))
-  snippetPrompt += "<p>_____</p>"
+  snippetPrompt += "<p>____________________?</p>"
 
   //Get correct answer
   correctAnswerIndex = getRandomInt(3);
@@ -380,7 +382,7 @@ function incorrectAnswerPicked()
 
 function endQuiz()
 {
-  finalScoreElem.text(currentScore);
+  finalScoreElem.text(currentScore * 10);
   quizContainerElem.css("display","none");
   resultsContainerElem.css("display","block");
 }
@@ -390,6 +392,11 @@ function endQuiz()
 This is where we will define functions that are called by event handlers,
 Such as click methods for buttons
 */
+
+function backButtonClicked()
+{
+    window.location.href = "./index.html";
+}
 
 function answerBtnClicked(event)
 {
@@ -426,6 +433,8 @@ This is where we will assign the events of various elements to their functions.
 for (let i = 0; i < btnElems.length; i++) {
   btnElems[i].click(answerBtnClicked);
 }
+
+backBtnElem.click(backButtonClicked);
 
 //Code to run on Page load
 /*

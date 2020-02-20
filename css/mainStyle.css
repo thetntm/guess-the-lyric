@@ -1,15 +1,77 @@
+body {
+    background-color:#322a39;
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+h1,h2,h3,h4,h5 {
+    margin-bottom: .5rem;
+}
+
 .container {
     padding: initial;
     align-items: center;
     position: relative;
-   
 }
+
+.centered {
+    text-align: center;   
+}
+
+.lyrics-wrapper
+{
+    padding-top: 60px;
+}
+
+.lyrics {
+    text-align: right;
+    float: inline-end;
+    font-size: xx-large;
+}
+
+.instruction-wrapper {
+    margin: 5px 0px;
+}
+
+.info-wrapper {
+    background-color: #8a5167;
+    border-radius: 5rem;
+    padding: 10px 0px 20px;
+}
+
+.cover-image {
+    border-radius: 1.5rem;
+}
+
+.info-row {
+    margin: 20px 0px;
+}
+
+.score-wrapper {
+    background-color: white;
+    border-radius: 1rem;
+    margin-top: 1rem;
+    padding: .5rem 5px;
+    font-size: 2rem;
+    color: black;
+    width:auto;
+}
+
 .gameTitle {
     color: white;
     font-family: 'Lobster', cursive;
     font-size: 95px;
-  
-  
+    margin-top: 60px;
+}
+
+.song-title {
+    color: white;
+    font-family: 'Lobster', cursive;
+    font-size: 45px;
+}
+
+.artist-name {
+    font-size: 3rem;
 }
 
 #startBtn {
@@ -26,4 +88,30 @@
 #startBtn:hover {
     background-color: white;
     color: #d78973;
+}
+
+.gameBtn {
+    color: white;
+    background-color: #d78973;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: large;
+    height: 76px;
+    border-radius: 5rem;
+    border-color: #d78973;
+    white-space: normal;
+}
+
+.gameBtn:hover {
+    background-color: white;
+    color: #d78973;
+}
+
+.gameBtn:focus {
+    color: white;
+    background-color: #d78973;
+    border: none;
+}
+
+.final-score {
+    font-size: 10rem;
 }

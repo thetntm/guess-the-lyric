@@ -9,49 +9,92 @@
     <link rel="stylesheet" href="css/Skeleton-2.0.4/css/skeleton.css">
     <!--Custom CSS-->
     <link rel="stylesheet" type="text/css" href="css/mainStyle.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
     <!--Page Title-->
-    <title>Document</title>
+    <title>Guess The Lyric</title>
 </head>
 <body>
     <!--Main Quiz Container-->
     <div class="container" id="quiz-container">
 
-        <h1>
-            <span id="song-title"></span>
-        </h1>
+        <div class="row">
+            <div class="ten columns">
+                <div class="instruction-wrapper">
+                    <h2>Guess the next lyric of the song:</h2>
+                </div>
+                
+            </div>
+            <div class="two columns">
+                <div class="score-wrapper centered">
+                    Score: <span id="score-display">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="row info-row">
 
-        <h2>
-            <span id="song-artist"></span>
-        </h2>
+            <div class="six columns centered">
+                <div class="info-wrapper">
+                    <h1>
+                        <span id="song-title" class="song-title"></span>
+                    </h1>
+            
+                    <h2>
+                        <span id="song-artist" class="artist-name"></span>
+                    </h2>
+            
+                    <img id="song-album-cover" class="cover-image">
 
-        <img id="song-album-cover">
+                    <div id="last-fm-div" style="display:none">
+                        <a href="" id="last-fm-link">View this song on Last.FM!</a>
+                    </div>
+                </div>
+            </div>
 
-        Current Score:<span id="score-display">0</span>
+            <div class="six columns">
+                <div class="lyrics-wrapper">
+                    <span id="lyrics-display" class="lyrics"></span>
+                </div>
+            </div>
+        </div>
 
-        <button id="button-0">
-            <span id="choice-0">Lyric choice 1</span>
-        </button>
-        <button id="button-1">
-            <span id="choice-1">Lyric choice 2</span>
-        </button>
-        <button id="button-2">
-            <span id="choice-2">Lyric choice 3</span>
-        </button>
-        <button id="button-3">
-            <span id="choice-3">Lyric choice 4</span>
-        </button>
-
-        <span id="lyrics-display"></span>
-
-        <div id="last-fm-div" style="display:none">
-            <a href="" id="last-fm-link">View this song on Last.FM!</a>
+        <div class="row">
+            <div class="twelve columns centered">
+                <p>
+                    <button id="button-0" class="gameBtn">
+                        <span id="choice-0">Lyric choice 1</span>
+                    </button>
+                </p>
+                <p>
+                    <button id="button-1" class="gameBtn">
+                        <span id="choice-1">Lyric choice 2</span>
+                    </button>
+                </p>
+                <p>
+                    <button id="button-2" class="gameBtn">
+                        <span id="choice-2">Lyric choice 3</span>
+                    </button>
+                </p>
+                <p>
+                    <button id="button-3" class="gameBtn">
+                        <span id="choice-3">Lyric choice 4</span>
+                    </button>
+                </p>
+            </div>
         </div>
     </div>
 
     <!--Results Container-->
     <div class = "container" id="results-container" style="display:none">
-        <h1>Results</h1>
-        <span id="final-score">0</span>
+        <h1 class="gameTitle centered">Final Score:</h1>
+
+        <p class="centered final-score">
+            <span id="final-score">0</span>%
+        </p>
+
+        <p class="centered">
+            <button id="go-back" class="gameBtn">Play Again</button>
+        </p>
     </div>
     <!--AJAX Javascript-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
