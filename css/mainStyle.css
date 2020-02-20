@@ -95,21 +95,21 @@ h1,h2,h3,h4,h5 {
     background-color: #d78973;
     font-family: 'Times New Roman', Times, serif;
     font-size: large;
-    height: 76px;
+    min-height: 76px;
     border-radius: 5rem;
     border-color: #d78973;
     white-space: normal;
-}
-
-.gameBtn:hover {
-    background-color: white;
-    color: #d78973;
 }
 
 .gameBtn:focus {
     color: white;
     background-color: #d78973;
     border: none;
+}
+
+.gameBtn:hover {
+    background-color: white;
+    color: #d78973;
 }
 
 .final-score {
