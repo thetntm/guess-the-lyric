@@ -6,7 +6,7 @@ If Variables are used only in one function, declare them within that function's 
 
 //Values that will be commented out in the final product
 
-let sampleLastFMRequestURL = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=fb824c5191bba5f0fb691292f3402986&artist=cher&track=believe&format=json"
+let sampleLastFMRequestURL = "https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=fb824c5191bba5f0fb691292f3402986&artist=cher&track=believe&format=json"
 
 //Values that aren't reset when rebootData() is called:
 
@@ -26,6 +26,10 @@ let musicMatchURL = `https://api.musixmatch.com/ws/1.1/?apikey=${musicMatchToken
 
 //Values that ARE reset when rebootData() is called:
 
+let songLyricsAJAXFinished = false; //for checking if the Lyrics call has finished.
+
+let lastFMAJAXFinished = false; //for checking if the lastFM call has finished.
+
 let songLoaded = false; // Used to check if the song is being loaded. Important for button click events
 
 let currentSong = null; // currently loaded song
@@ -37,6 +41,10 @@ let currentSongTitle = null; // current song title
 let currentArtist = null; // current artist name
 
 let currentLyrics = null; // currently loaded lyrics
+
+let currentImageSrc = "";
+
+let currentLastFMLink = "";
 
 let correctAnswerIndex = null; //Used to determine which answer is the correct answer, randomly set when the song is loaded.
 
@@ -93,6 +101,15 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+function tryToLoadSong()
+{
+  if (songLyricsAJAXFinished && lastFMAJAXFinished)
+  {
+    loadSong();
+  }
+}
+
+//Main function for updating what is shown on screen based on data from all the ajax calls. is run after the final ajax call returns.
 function loadSong()
 {
   // Get and Set lastfm data
@@ -143,10 +160,14 @@ function loadSong()
   }
 
   //set JQ wrapper content
+  lyricsDisplayElem.empty();
   lyricsDisplayElem.append(snippetPrompt);
   choiceSpanElems[correctAnswerIndex].text(correctAnswerText);
   songTitleElem.text(currentSongTitle);
   songArtistElem.text(currentArtist);
+
+  songAlbumCoverElem.attr("src",currentImageSrc);
+  songLastFMLink.attr("href",currentLastFMLink);
 
   songLoaded = true;
 }
@@ -179,28 +200,29 @@ function getRandomLine(lyrics)
 
 function lastFMSuccess(data)
 {
+  lastFMAJAXFinished = true;
   if (data.error)
   {
     // give up onthe lastFM data and load the song as is
     console.log("an error occured with loading lastfm data!")
     lastFMDiv.css("display","none")
-    loadSong();
+    tryToLoadSong();
     return;
   }
   lastFMDiv.css("display","block");
 
   let lastFMTrackData = data.track;
 
-  songLastFMLink.attr("href",lastFMTrackData.url);
+  currentLastFMLink = lastFMTrackData.url;
 
   if (lastFMTrackData.album)
   {
-    songAlbumCoverElem.attr("src",lastFMTrackData.album.image[3]["#text"]);
+    currentImageSrc = lastFMTrackData.album.image[3]["#text"]
   }
 
   console.log(lastFMTrackData);
 
-  loadSong();
+  tryToLoadSong();
 }
 
 function lastFMError(jqXHR, textStatus, errorThrown) {
@@ -220,7 +242,7 @@ function makeLastFMRequest()
       track:currentSongTitle,
       format:"json"
     },
-    url: "http://ws.audioscrobbler.com/2.0/",
+    url: "https://ws.audioscrobbler.com/2.0/",
     success: lastFMSuccess,
     error: lastFMError
   })
@@ -244,9 +266,11 @@ function musixmatchChartsSuccess(data) {
     rebootData()
     return;
   }
-
   // fetch lyrics for trackId
   makeMusixmatchLyricsRequest();
+
+  // get lastFM data
+  makeLastFMRequest();
 }
 
 function musixmatchChartsError(jqXHR, textStatus, errorThrown) {
@@ -283,7 +307,8 @@ function musixmatchLyricsSuccess(data)
   //get the lyrics and cut off the commercial part
   currentLyrics = data.message.body.lyrics.lyrics_body
   currentLyrics = currentLyrics.slice(0,currentLyrics.indexOf("...") - 1);
-  makeLastFMRequest();
+  songLyricsAJAXFinished = true;
+  tryToLoadSong();
 }
 
 function musixmatchLyricsError(jqXHR, textStatus, errorThrown) {
@@ -312,7 +337,10 @@ function makeMusixmatchLyricsRequest()
 
 function rebootData()
 {
-  lyricsDisplayElem.empty();
+
+  songLyricsAJAXFinished = false;
+
+  lastFMAJAXFinished = false;   
 
   songLoaded = false; // Used to check if the song is being loaded. Important for button click events
 
@@ -329,6 +357,10 @@ function rebootData()
   correctAnswer = null; //Used to determine which answer is the correct answer, randomly set when the song is loaded.
 
   correctAnswerText = "";
+
+  currentImageSrc = "";
+
+  currentLastFMLink = "";
 
   makeMusixmatchChartsRequest();
 }
