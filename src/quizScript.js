@@ -18,6 +18,8 @@ let maxQuizIndex = 9; //Max amount quizIndex can get to before going on to resul
 
 let pastSongTitles = [];
 
+let pastChoiceStrings = []; //used to make sure the same lyric isn't pulled twice
+
 let lastFMKey = "fb824c5191bba5f0fb691292f3402986";
 
 let musicMatchToken = "c1f50a305f3f47234be0d4c3568ef5c9"
@@ -147,18 +149,21 @@ function loadSong()
   correctAnswerText = currentParagraph[finalIndex];
 
   //Get fake answers
+
+  pastChoiceStrings = [];
+
   for (let i = 0; i < 4; i++) {
     if (i==correctAnswerIndex)
     {
       continue;
     }
     let newFakeAnswer = getRandomLine(currentLyrics);
-    while (newFakeAnswer == correctAnswerText)
+    while ((newFakeAnswer == correctAnswerText) || (pastChoiceStrings.includes(newFakeAnswer)))
     {
       newFakeAnswer = getRandomLine(currentLyrics);
     }
     choiceSpanElems[i].text(newFakeAnswer);
-
+    pastChoiceStrings.push(newFakeAnswer);
   }
 
   //set JQ wrapper content
