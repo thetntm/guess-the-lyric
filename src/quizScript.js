@@ -222,8 +222,6 @@ function lastFMSuccess(data)
     currentImageSrc = lastFMTrackData.album.image[3]["#text"]
   }
 
-  console.log(lastFMTrackData);
-
   tryToLoadSong();
 }
 
@@ -257,7 +255,6 @@ function musixmatchChartsSuccess(data) {
 
   let trackList = data.message.body.track_list;
   currentSong = trackList[getRandomInt(trackList.length - 1)].track;
-  console.log(currentSong);
   currentMusixmatchTrackID = currentSong.track_id;
   currentSongTitle = currentSong.track_name;
   currentArtist = currentSong.artist_name;
